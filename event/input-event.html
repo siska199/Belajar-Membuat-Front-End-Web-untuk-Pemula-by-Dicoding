@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Form World</title>
+        <style>
+            .contents{
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border: 1px solid black;
+                border-width:2px;
+                padding : 8px;
+            }
+ 
+            .form-element{
+                margin: 8px;
+                align-items: left;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="contents">
+            <h2 align="center"><b>Input Event Form</b></h2>
+            <div class="formContent">
+                <form id="formDataDiri" autocomplete="off">
+                    <div class="form-element" id="fieldName">
+                        <label for="nama">Nama Panggilan:</label><br>
+                        <input id="inputNamaPanggilan" type="text" name="nama" placeholder="Nama panggilan Anda"  maxlength="15"><br>
+                        <label id="notifikasiSisaKarakter" style="visibility:hidden">Sisa karakter : <span id="sisaKarakter"></span></label>
+                    </div>
+                    <div class="form-element" id="fieldCopy">
+                        <label for="copy"><i>Copy</i> tulisan ini:</label><br>
+                        <input id="inputCopy" type="text" name="copy" value="Hello World!" disabled><br>
+                    </div>
+                    <div class="form-element" id="fieldPaste">
+                        <label for="paste"><i>Paste</i> tulisan di sini:</label><br>
+                        <input id="inputPaste" type="text" name="paste" placeholder="Paste sesuatu di sini"><br>
+                    </div>
+                    <div class="form-element" id="fieldCaptcha">
+                        <label for="captcha">Tulis <i>captcha</i> berikut:</label><br>
+                        <img src="https://i.ibb.co/yy59QPB/Captcha.png" alt="Captcha"><br>
+                        <input id="inputCaptcha" type="text" name="captcha" placeholder="Tulis captcha di sini"><br>
+                        <p>Tekan Enter pada keyboard jika sudah selesai menulis <i>captcha</i></p>
+                    </div>
+                    <div class="form-element" align= "center">
+                        <input id="submitButton" type="submit" value="Submit Data" disabled>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+            // document.addEventListener('DOMContentLoaded', function (){
+            //     const inputMaxLengthOnLoad = document.getElementById("inputNamaPanggilan").maxLength;
+            //     document.getElementById("sisaKarakter").innerText = inputMaxLengthOnLoad;
+            // });
+            const name = document.getElementById('inputNamaPanggilan');
+            const nameNotif = document.getElementById('notifikasiSisaKarakter');
+            const sisaKarakter = document.getElementById('sisaKarakter');
+            const captcha = document.getElementById('inputCaptcha');
+            const subButton = document.getElementById('submitButton');
+            const copy = document.getElementById('inputCopy');
+            const paste = document.getElementById('inputPaste');
+            const form = document.getElementById('formDataDiri');
+            const karakterTotal = name.maxLength;
+            let globSisa = ''
+
+            function change(parameter){
+                if(parameter==0){
+                    console.log("masuk")
+                    sisaKarakter.innerText = "batas maksimal tercapai"
+                }else if(parameter<=5){
+                    nameNotif.style.color="red"
+                }else{
+                    nameNotif.style.color="black"
+                }
+            }
+
+            name.addEventListener('focus',()=>{
+                nameNotif.style.removeProperty('visibility')
+                if (globSisa){
+                    sisaKarakter.innerText = globSisa
+                    change(globSisa)
+
+                } else{
+                    sisaKarakter.innerText = karakterTotal
+                }
+                // change(sisaKarakter.innerTex)
+
+            })
+
+            name.addEventListener('blur',()=>{
+                nameNotif.style.visibility = 'hidden'
+            })
+
+            name.addEventListener('input',()=>{
+                console.log("Total Karakter", karakterTotal)
+                karakterDipakai = name.value.length;
+                console.log("Dipakai Karakter", karakterDipakai)
+                const karakterSaatIni = karakterTotal-karakterDipakai
+                globSisa = karakterSaatIni
+                sisaKarakter.innerText = globSisa
+
+                change(globSisa)
+
+            })
+
+            //Memberikan event onchange
+            captcha.addEventListener('change',()=>{
+                subButton.removeAttribute('disabled')
+            })
+            
+            //Memberikan event oncopy
+            copy.addEventListener('copy',()=>{
+                alert("Anda telah men-copy sesuatu...")
+            })
+
+            //Memberikan event oncopy
+            paste.addEventListener('paste',()=>{
+                alert("Anda telah men-paste sebuah teks...")
+            })
+
+            //Memberikan event submit
+            form.addEventListener('submit', function(){
+                event.preventDefault() //Selalu ada di atas
+
+                if(captcha.value=="PRNU"){
+                    console.log("lolos")
+                    alert("Selamat! Captcha Anda Lolos :D")
+                    name.value = '';
+                    paste.value = '';
+                    captcha.value = '';
+                }else{
+                    alert("Captcha anda belum tepat")
+
+                   
+                }
+
+                subButton.setAttribute('disabled',true)
+
+
+            })
+
+            // document.getElementById("formDataDiri").addEventListener("submit", function(){
+            //     const inputCaptcha = document.getElementById("inputCaptcha").value;
+            //     if (inputCaptcha == "PRNU"){
+            //         event.preventDefault();
+            //         alert("Selamat! Captcha Anda lolos :D");
+            //     } else{
+            //         alert("Captcha Anda belum tepat :(")
+            //         submitButtonStatus.addAttribute("disabled", true);
+            //     }
+            // })
+            
+        </script>
+    </body>
+</html>
